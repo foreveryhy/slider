@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		* {
+            padding: 0;
+            margin: 0;
+        }
+		
+		body {
+			background: black;
+		}
+        .slider {
+            width: 510px;
+            height: 454px;
+            overflow: hidden;
+            position: relative;
+            border: 10px solid hotpink;
+        }
+
+        .slider .list {
+            /*width: 2040px;*/
+            height: 454px;
+            position: absolute;
+            list-style: none;
+            left: 0;
+            top: 0;
+        }
+
+        .slider .list li {
+            width: 510px;
+            height: 454px;
+            float: left;
+            font-size: 0;
+        }
+
+        .slider .list li img {
+            width: 510px;
+            display: block;
+        }
+
+        .slider .prev, .slider .next {
+            position: absolute;
+			top: 200px;
+			width: 30px;
+			height: 30px;
+			color: black;
+			border:1px solid blue;
+        }
+
+        .prev {
+            left: 0;
+        }
+
+        .next {
+            right: 0;
+        }
+
+        .pagination {
+            position: absolute;
+            left: 30px;
+            bottom: 20px;
+            list-style: none;
+
+        }
+
+        .pagination .bullet {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: yellow;
+            float: left;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .pagination .bullet.focus {
+            background: pink;
+        }
+	</style>
+</head>
+<body>
+	<div class="slider">
+	    <ul class="list">
+	        <li><img src="./imgs/imgs (1).jpg" alt=""></li>
+	        <li><img src="./imgs/imgs (1).png" alt=""></li>
+	        <li><img src="./imgs/imgs (5).png" alt=""></li>
+	        <li><img src="./imgs/imgs (4).png" alt=""></li>
+	    </ul>
+	    <button class="prev">&lt;</button>
+	    <button class="next">&gt;</button>
+	    <ul class="pagination">
+	        <li class="bullet focus"></li>
+	        <li class="bullet"></li>
+	        <li class="bullet"></li>
+	        <li class="bullet"></li>
+	    </ul>
+	</div>
+	<script src="./vendor/jquery-3.2.1.js"></script>
+	<script>
+		(function() {
+			var current;
+			var count;
+			var liWidth;
+			function init() {
+				current = 1;
+				var $li1_fake = $('.list li:first-of-type').clone();
+				var $liLast_fake = $('.list li:last-of-type').clone();
+				
+				$li1_fake.appendTo('.list');
+				$liLast_fake.prependTo('.list');
+
+				count = $('.list li').length;
+				liWidth = $('li').width();
+
+				$('.list').css({width: count * liWidth});
+				$('.list').css({left: -liWidth});
+
+				$('.prev').click(function () {
+					slidePrev();
+				})
+
+				$('.next').click(function () {
+					slideNext();
+				})
+
+				$('.pagination .bullet').click(function () {
+					current = $(this).index()+1;
+					slideTo(current);
+				})
+
+			}
+
+			function slideTo(index) {
+				
+				if(index === count) {
+					$('.list').css({left: -liWidth})
+					index = current = 2;
+				}
+
+				if(index === -1) {
+					$('.list').css({left: -liWidth * (count-2)})
+					index = current = count - 3;
+				}
+
+				var focusIndex;
+				if(index === 0) {
+					focusIndex = $('.bullet').length - 1;
+				} else if (index === count-1) {
+					focusIndex = 0;
+				} else {
+					focusIndex = index-1;
+				}
+
+				$('.focus').removeClass('focus');
+				$('.bullet').eq(focusIndex).addClass('focus');
+
+				var left = -index * liWidth;
+
+
+				$('.list').stop().animate({
+					left: left
+				})
+			}
+
+			function slideNext() {
+				current++;
+				slideTo(current);
+			}
+
+			function slidePrev() {
+				current--;
+				slideTo(current);
+			}
+
+			function autoPlay() {
+
+			}
+
+			function stopAuto() {
+
+			}
+
+			init();
+		})()
+		
+	</script>
+</body>
+</html>
